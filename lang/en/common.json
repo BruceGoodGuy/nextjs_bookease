@@ -1,0 +1,33 @@
+{
+    "common": {
+        "madeby": "Made by",
+        "features": "Features",
+        "customers": "Customers",
+        "about": "About",
+        "aboutme": "About me",
+        "login": "Login",
+        "signup": "Sign Up",
+        "lang": {
+            "vi": "Vi",
+            "en": "En"
+        },
+        "animationcontent": {
+            "start": "This is KPI project 2023",
+            "usingnext": "Using NextJS 13",
+            "bookingsystem": "Welcome to BookEase - Your Ultimate Booking Solution",
+            "letschill": "Let's chill!"
+        },
+        "contactme": "Contact Me"
+    },
+    "home": {
+        "obsfor": "Online Booking System for",
+        "allservices": "all service based industries",
+        "intro": "Effortlessly list services and providers, show their availability, and watch bookings come in 24/7 from both new and existing clients.",
+        "book": {
+            "good": "good",
+            "ease": "ease",
+            "fast": "fast",
+            "simple": "simple"
+        }
+    }
+}

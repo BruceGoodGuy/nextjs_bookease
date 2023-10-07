@@ -1,0 +1,33 @@
+{
+    "common": {
+        "madeby": "Bởi",
+        "features": "Tính năng",
+        "customers": "Khách hàng",
+        "about": "Về",
+        "aboutme": "Về tôi",
+        "login": "Đăng nhập",
+        "signup": "Đăng ký",
+        "lang": {
+            "vi": "Tiếng Việt",
+            "en": "Tiếng Anh"
+        },
+        "animationcontent": {
+            "start": "Dự án KPI năm 2023",
+            "usingnext": "Sử dụng NextJS 13",
+            "bookingsystem": "Chào mừng tới BookEase - Giải pháp đặt lịch hẹn tối ưu của bạn",
+            "letschill": "Hãy thư giãn!"
+        },
+        "contactme": "Liên hệ với tôi"
+    },
+    "home": {
+        "obsfor": "Hệ thống đặt lịch trực tuyến cho",
+        "allservices": "tất cả các lĩnh vực",
+        "intro": "Dễ dàng liệt kê các dịch vụ và nhà cung cấp, hiển thị tính khả dụng của họ và theo dõi các lượt đặt chỗ diễn ra 24/7 từ cả khách hàng mới và khách hàng hiện tại.",
+        "book": {
+            "good": "tốt",
+            "ease": "dễ dàng",
+            "fast": "nhanh chóng",
+            "simple": "đơn giản"
+        }
+    }
+}
