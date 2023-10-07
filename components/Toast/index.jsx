@@ -1,7 +1,7 @@
-import { Toaster } from 'react-hot-toast';
+import { Toaster as Toast } from 'react-hot-toast';
 
-export default Toaster = () => {
+export default function Toaster(){
   return (
-      <Toaster />
+      <Toast />
   );
 };

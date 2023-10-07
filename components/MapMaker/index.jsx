@@ -46,4 +46,6 @@ const MapMaker = forwardRef((props, ref) => {
   );
 });
 
+MapMaker.displayName = "MapMakerComponent";
+
 export default MapMaker;
