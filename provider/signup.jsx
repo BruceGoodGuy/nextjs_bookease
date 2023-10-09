@@ -1,12 +1,12 @@
 "use client";
 import { createContext, useState } from "react";
 import Toaster from "@/components/Toast";
-import { rule } from "postcss";
 
 export const SignUp = createContext(null);
 
 const availableFields = {
   step1: ["companyname", "companyurl", "workphone", "fields"],
+  step2: ["city", "countrycode", "street"],
 };
 
 function SignUpContext({ children }) {
@@ -18,6 +18,14 @@ function SignUpContext({ children }) {
       companyurl: "",
       workphone: "",
       fields: new Set([]),
+      country: "United States",
+      countrycode: "US",
+      lat: "36.147247",
+      long: "-115.156029",
+      city: "Las Vegas",
+      state: "",
+      street: "",
+      zip: "",
     },
     errors: {
       conheo: "dasda",
@@ -59,6 +67,13 @@ function SignUpContext({ children }) {
     return await response.data;
   };
 
+  const updateLocation = (location) => {
+    setData({
+      ...data,
+      form: { ...data.form, ...location },
+    });
+  };
+
   const submitNextStep = async () => {
     const { step, form } = data;
     const fields = availableFields[`step${step}`];
@@ -70,14 +85,18 @@ function SignUpContext({ children }) {
     }
     setErrors(errors);
     if (Object.keys(errors).length === 0) {
-        setData({...data, step: 2});
+      setData({ ...data, step: 2 });
     }
   };
 
-  const validationFields = async (name, data) => {
-    let value = data;
-    if (typeof data === "string") {
-      value = data.trim();
+  const validationFields = async (name, dataInput) => {
+    let value = dataInput;
+    const fields = availableFields[`step${data.step}`];
+    if (!fields.includes(name)) {
+      return {};
+    }
+    if (typeof dataInput === "string") {
+      value = dataInput.trim();
       if (value === "") {
         return { [name]: "Please fill in your " + name };
       }
@@ -119,6 +138,7 @@ function SignUpContext({ children }) {
         validationFields,
         submitNextStep,
         setErrors,
+        updateLocation,
       }}
     >
       <Toaster />

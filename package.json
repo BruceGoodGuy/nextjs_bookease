@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@maptiler/client": "^1.6.0",
     "@maptiler/geocoding-control": "^0.0.99",
     "@maptiler/sdk": "^1.1.2",
     "@nextui-org/react": "^2.1.13",

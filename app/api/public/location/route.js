@@ -15,7 +15,6 @@ export async function GET(request) {
     }
   } catch (e) {
     status = e.status;
-    console.log(e);
   }
   return Response.json({ statusCode: status, data: response });
 }

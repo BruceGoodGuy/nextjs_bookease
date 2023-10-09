@@ -7,14 +7,14 @@ import Step3 from "@/components/SignupStepper/step3";
 import { Button } from "@nextui-org/react";
 
 export default function SignupStepper() {
-  let { data, submitNextStep } = useContext(SignUpContext);
+  let { data, submitNextStep, setData } = useContext(SignUpContext);
   const [state, setstate] = useState({ errors: {} });
   const renderStepper = function (step) {
     switch (step) {
       case 1:
         return <Step1 label={"General company information"} />;
       case 2:
-        return <Step2 />;
+        return <Step2 label={"Address"} />;
       case 3:
         return <Step3 />;
       default:
@@ -22,16 +22,34 @@ export default function SignupStepper() {
     }
   };
 
-//   const handleSubmit = async () => {
-//     const errors = await submitNextStep();
-//     setstate({ ...state, errors });
-//   };
+  const returnStep = function () {
+    let prevStep = data.step - 1;
+    if (prevStep >= 1) {
+      setData({...data, step: prevStep});
+    }
+  };
+
+  //   const handleSubmit = async () => {
+  //     const errors = await submitNextStep();
+  //     setstate({ ...state, errors });
+  //   };
 
   return (
-    <div className="w-full md:w-3/5">
+    <div className="w-full">
       <form>
         {renderStepper(data.step)}
-        <div className="flex justify-end max-w-md mt-3">
+        <div className="flex md:gap-2 justify-end max-w gap-2 mt-3 flex-col md:flex-row">
+          {data.step !== 1 ? (
+            <Button
+              variant="bordered"
+              onPress={returnStep}
+              className="md:w-1/3 w-full"
+            >
+              Back
+            </Button>
+          ) : (
+            ""
+          )}
           <Button
             color="primary"
             // isDisabled={data.isDisabledButton}

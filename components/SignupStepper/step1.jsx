@@ -9,10 +9,10 @@ export default function Step1({ label }) {
   const [isPending, startTransition] = useTransition();
   const [stepData, setDataStep] = useState({
     form: {
-      companyname: "",
-      companyurl: "",
-      workphone: "",
-      fields: new Set([]),
+      companyname: data.form.companyname,
+      companyurl: data.form.companyurl,
+      workphone: data.form.workphone,
+      fields: data.form.fields,
     },
     errors: data.errors,
     isDirtyFields: false,
