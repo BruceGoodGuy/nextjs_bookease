@@ -13,9 +13,11 @@
     "@maptiler/geocoding-control": "^0.0.99",
     "@maptiler/sdk": "^1.1.2",
     "@nextui-org/react": "^2.1.13",
+    "@prisma/client": "^5.4.2",
     "framer-motion": "^10.16.4",
     "maplibre-gl": "^3.4.0",
     "next": "^13.5.4",
+    "next-auth": "^4.23.2",
     "next-intl": "^2.20.2",
     "next-themes": "^0.2.1",
     "react": "latest",
@@ -31,5 +33,12 @@
     "postcss": "latest",
     "prisma": "^5.4.1",
     "tailwindcss": "latest"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "middleware.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "author": "",
+  "license": "ISC"
 }

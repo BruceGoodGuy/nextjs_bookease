@@ -7,6 +7,7 @@ export const SignUp = createContext(null);
 const availableFields = {
   step1: ["companyname", "companyurl", "workphone", "fields"],
   step2: ["city", "countrycode", "street"],
+  step3: ["username", "email", "password", "tos"],
 };
 
 function SignUpContext({ children }) {
@@ -26,10 +27,12 @@ function SignUpContext({ children }) {
       state: "",
       street: "",
       zip: "",
+      username: "",
+      email: "",
+      password: "",
+      tos: "",
     },
-    errors: {
-      conheo: "dasda",
-    },
+    errors: {},
   });
 
   const setErrors = (errors) => {
@@ -85,7 +88,20 @@ function SignUpContext({ children }) {
     }
     setErrors(errors);
     if (Object.keys(errors).length === 0) {
-      setData({ ...data, step: 2 });
+      if (data.step < 3) {
+        setData({ ...data, step: step + 1 });
+      } else {
+        fetch(process.env.NEXT_PUBLIC_APP_API + "/public/company", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify(data.form)
+        }).then(data => data.json() ).then(response => {
+          console.log(response);
+        })
+      }
     }
   };
 
@@ -121,6 +137,37 @@ function SignUpContext({ children }) {
       case "workphone":
         if (!/^\d{10}$/.test(value)) {
           return { workphone: "Please insert valid phone number" };
+        }
+        break;
+      case "email":
+        if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)) {
+          return {
+            email: "Oops, please check if you entered correct email address",
+          };
+        }
+        break;
+      case "password":
+        // Check for at least one lowercase letter
+        const lowercaseRegex = /[a-z]/;
+
+        // Check for at least one uppercase letter
+        const uppercaseRegex = /[A-Z]/;
+
+        // Check for at least one special character
+        const specialCharRegex = /[!@#$%^&*]/;
+
+        // Check for at least one number
+        const numberRegex = /[0-9]/;
+        if (
+          !lowercaseRegex.test(value) ||
+          !uppercaseRegex.test(value) ||
+          !specialCharRegex.test(value) ||
+          !numberRegex.test(value)
+        ) {
+          return {
+            password:
+              "Password should include at least one lowercase letter, one uppercase letter, one digit, and one of these special characters: !@#$%^&*.",
+          };
         }
         break;
       default:

@@ -1,15 +1,67 @@
-// datasource db {
-//     provider = "mongodb"
-//     url      = env("DATABASE_URL")
-// }
+// schema.prisma
 
-// generator client {
-//     provider = "prisma-client-js"
-// }
+generator client {
+    provider = "prisma-client-js"
+}
 
-// model Test {
-//     id       String    @id @default(auto()) @map("_id") @db.ObjectId
-//     slug     String    @unique
-//     title    String
-//     body     String
-// }
+datasource db {
+    provider = "mongodb"
+    url      = env("MONGODB_URI") // uses connection pooling
+}
+
+model Company {
+    id         String                @id @default(cuid()) @map("_id")
+    name       String
+    url        String                @unique
+    email      String                @unique
+    password   String
+    phone      String
+    categories CategoriesOnCompany[]
+    location   Location              @relation(fields: [locationId], references: [id])
+    locationId String                @unique
+    status     Boolean               @default(false)
+    createdAt  DateTime              @default(now()) @map(name: "created_at")
+    updatedAt  DateTime              @updatedAt @map(name: "updated_at")
+
+    @@map(name: "companies")
+}
+
+model Location {
+    id          String   @id @default(cuid()) @map("_id")
+    Company     Company?
+    country     String
+    countryCode String
+    state       String?
+    city        String
+    zip         String?
+    street      String
+    lat         String
+    long        String
+    createdAt   DateTime @default(now()) @map(name: "created_at")
+    updatedAt   DateTime @updatedAt @map(name: "updated_at")
+
+    @@map(name: "locations")
+}
+
+model Category {
+    id        String                @id @default(cuid()) @map("_id")
+    category  Int
+    title     String
+    companies CategoriesOnCompany[]
+    createdAt DateTime              @default(now()) @map(name: "created_at")
+    updatedAt DateTime              @updatedAt @map(name: "updated_at")
+
+    @@map(name: "categories")
+}
+
+model CategoriesOnCompany {
+    id         String    @id @default(cuid()) @map("_id")
+    Company    Company?  @relation(fields: [companyId], references: [id])
+    companyId  String?
+    Category   Category? @relation(fields: [categoryId], references: [id])
+    categoryId String?
+    createdAt  DateTime  @default(now()) @map(name: "created_at")
+    updatedAt  DateTime  @updatedAt @map(name: "updated_at")
+
+    @@map(name: "categoriesoncompany")
+}
