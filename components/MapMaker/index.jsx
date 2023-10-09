@@ -7,7 +7,6 @@ import { SignUp as SignUpContext } from "@/provider/signup";
 
 import * as maptilersdk from "@maptiler/sdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
-import "./map.css";
 
 export default function MapMaker({ lat, long }) {
   const { updateLocation } = useContext(SignUpContext);
@@ -100,7 +99,7 @@ export default function MapMaker({ lat, long }) {
         </Button>
       </div>
       <div className="flex mt-3">
-        <div ref={mapContainer} className="map" />
+        <div ref={mapContainer} className="map !absolute w-full h-full" />
       </div>
     </div>
   );
