@@ -98,7 +98,6 @@ export default function Step1({ label }) {
         error = { ...error, ...companyUrlError };
       }
     }
-
     errors = { ...errors, ...error };
 
     if (!error[name]) {
@@ -214,7 +213,7 @@ export default function Step1({ label }) {
             errorMessage={data.errors.fields}
           >
             {stepData.fields.map((field) => (
-              <SelectItem key={field.label} value={field.label}>
+              <SelectItem key={field.id} value={field.label}>
                 {field.label}
               </SelectItem>
             ))}

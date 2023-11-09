@@ -1,67 +1,69 @@
-// schema.prisma
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = env("MONGODB_URI") // uses connection pooling
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
 }
 
-model Company {
-    id         String                @id @default(cuid()) @map("_id")
-    name       String
-    url        String                @unique
-    email      String                @unique
-    password   String
-    phone      String
-    categories CategoriesOnCompany[]
-    location   Location              @relation(fields: [locationId], references: [id])
-    locationId String                @unique
-    status     Boolean               @default(false)
-    createdAt  DateTime              @default(now()) @map(name: "created_at")
-    updatedAt  DateTime              @updatedAt @map(name: "updated_at")
-
-    @@map(name: "companies")
+model categories {
+  id         String                @id @default(auto()) @map("_id") @db.ObjectId
+  category   Int
+  created_at DateTime              @default(now()) @db.Date
+  label      String
+  updated_at DateTime              @default(now()) @db.Date
+  companies  categoriesoncompany[]
 }
 
-model Location {
-    id          String   @id @default(cuid()) @map("_id")
-    Company     Company?
-    country     String
-    countryCode String
-    state       String?
-    city        String
-    zip         String?
-    street      String
-    lat         String
-    long        String
-    createdAt   DateTime @default(now()) @map(name: "created_at")
-    updatedAt   DateTime @updatedAt @map(name: "updated_at")
+model categoriesoncompany {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  companies    companies  @relation(fields: [companiesId], references: [id])
+  companiesId  String     @db.ObjectId
+  categories   categories @relation(fields: [categoriesId], references: [id])
+  categoriesId String     @db.ObjectId
 
-    @@map(name: "locations")
+  @@map("CategoriesOnCompanies")
 }
 
-model Category {
-    id        String                @id @default(cuid()) @map("_id")
-    category  Int
-    title     String
-    companies CategoriesOnCompany[]
-    createdAt DateTime              @default(now()) @map(name: "created_at")
-    updatedAt DateTime              @updatedAt @map(name: "updated_at")
+model companies {
+  id          String                @id @default(auto()) @map("_id") @db.ObjectId
+  created_at  DateTime              @default(now()) @db.Date
+  email       String                @unique
+  location    locations             @relation(fields: [locationsId], references: [id])
+  locationsId String                @unique @db.ObjectId
+  name        String
+  password    String
+  phone       String
+  status      Boolean               @default(false)
+  updated_at  DateTime              @default(now()) @db.Date
+  url         String                @unique
+  categories  categoriesoncompany[]
+  staffs      staffs[]
 
-    @@map(name: "categories")
+  @@map("Company")
 }
 
-model CategoriesOnCompany {
-    id         String    @id @default(cuid()) @map("_id")
-    Company    Company?  @relation(fields: [companyId], references: [id])
-    companyId  String?
-    Category   Category? @relation(fields: [categoryId], references: [id])
-    categoryId String?
-    createdAt  DateTime  @default(now()) @map(name: "created_at")
-    updatedAt  DateTime  @updatedAt @map(name: "updated_at")
+model locations {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  city        String
+  country     String
+  countryCode String
+  created_at  DateTime   @default(now()) @db.Date
+  lat         String
+  long        String
+  state       String
+  street      String
+  updated_at  DateTime   @default(now()) @db.Date
+  zip         String
+  company     companies?
 
-    @@map(name: "categoriesoncompany")
+  @@map("Location")
+}
+
+model staffs {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  companies   companies @relation(fields: [companiesId], references: [id])
+  companiesId String    @db.ObjectId
 }

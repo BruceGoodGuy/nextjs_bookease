@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { SignUp as SignUpContext } from "@/provider/signup";
 import Step1 from "@/components/SignupStepper/step1";
 import Step2 from "@/components/SignupStepper/step2";
@@ -8,7 +8,6 @@ import { Button } from "@nextui-org/react";
 
 export default function SignupStepper() {
   let { data, submitNextStep, setData } = useContext(SignUpContext);
-  const [state, setstate] = useState({ errors: {} });
   const renderStepper = function (step) {
     switch (step) {
       case 1:
@@ -35,6 +34,8 @@ export default function SignupStepper() {
         {renderStepper(data.step)}
         <div className="flex md:gap-2 justify-end max-w gap-2 mt-3 flex-col md:flex-row">
           <Button
+            isDisabled={data.isDisabledButton}
+            isLoading={data.isDisabledButton}
             color="primary"
             onPress={submitNextStep}
             className="md:w-1/3 w-full"

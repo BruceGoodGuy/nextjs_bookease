@@ -1,6 +1,8 @@
 "use client";
-import { createContext, useState } from "react";
+import { createContext, useState, useTransition } from "react";
 import Toaster from "@/components/Toast";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export const SignUp = createContext(null);
 
@@ -11,9 +13,10 @@ const availableFields = {
 };
 
 function SignUpContext({ children }) {
+  const router = useRouter();
   const [data, setData] = useState({
     step: 1,
-    isDisabledButton: true,
+    isDisabledButton: false,
     form: {
       companyname: "",
       companyurl: "",
@@ -30,7 +33,7 @@ function SignUpContext({ children }) {
       username: "",
       email: "",
       password: "",
-      tos: "",
+      tos: true,
     },
     errors: {},
   });
@@ -57,6 +60,7 @@ function SignUpContext({ children }) {
   };
 
   const isUniqueCompanyURL = async (value) => {
+    setData({ ...data, isDisabledButton: true });
     const url = process.env.NEXT_PUBLIC_APP_API + "/public/validation/company";
     const promise = await fetch(
       url +
@@ -67,6 +71,7 @@ function SignUpContext({ children }) {
     );
 
     const response = await promise.json();
+    setData({ ...data, isDisabledButton: false });
     return await response.data;
   };
 
@@ -80,6 +85,8 @@ function SignUpContext({ children }) {
   const submitNextStep = async () => {
     const { step, form } = data;
     const fields = availableFields[`step${step}`];
+    let body = form;
+    body = { ...body, fields: [...body.fields] };
     let errors = {};
     for (let field of fields) {
       const value = form[field] ?? "";
@@ -91,16 +98,30 @@ function SignUpContext({ children }) {
       if (data.step < 3) {
         setData({ ...data, step: step + 1 });
       } else {
+        setData({ ...data, isDisabledButton: true });
         fetch(process.env.NEXT_PUBLIC_APP_API + "/public/company", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // 'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: JSON.stringify(data.form)
-        }).then(data => data.json() ).then(response => {
-          console.log(response);
+          body: JSON.stringify(body),
         })
+          .then((data) => {
+            return data.json();
+          })
+          .then((response) => {
+            if (response.status !== 200) {
+              throw new Error(response.message);
+            }
+            router.push("/signup/complete");
+          })
+          .catch((e) => {
+            console.log("oops!");
+            toast.error(e + " ");
+          })
+          .finally(() => {
+            setData({ ...data, isDisabledButton: false });
+          });
       }
     }
   };
