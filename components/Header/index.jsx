@@ -8,6 +8,13 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
 import { Anek_Kannada } from "next/font/google";
@@ -15,6 +22,8 @@ import TypingAnimation from "@/components/TypingAnimation";
 import ThemeSwitcher from "@/components/ThemeSwitch";
 import LanguageSwitcher from "@/components/LanguageSwitch";
 import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 const anek = Anek_Kannada({
   subsets: ["latin"],
@@ -25,12 +34,27 @@ const anek = Anek_Kannada({
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const t = useTranslations("common");
+  const { data: session, status } = useSession();
   const content = [
     t("animationcontent.start"),
     t("animationcontent.usingnext"),
     t("animationcontent.bookingsystem"),
     t("animationcontent.letschill"),
   ];
+
+  const router = useRouter();
+
+  const handleOnPress = (type) => {
+    switch (type) {
+      case "manage":
+        router.replace("/manage");
+        break;
+      case "logout":
+        signOut();
+        router.replace("/");
+        break;
+    }
+  };
 
   const menuItems = [
     { label: t("features"), href: "/features" },
@@ -39,12 +63,7 @@ export default function Header() {
   ];
   return (
     <Fragment>
-      <div
-        className={
-          anek.className +
-          " w-full max-w-[1024px] mx-auto px-6"
-        }
-      >
+      <div className={anek.className + " w-full max-w-[1024px] mx-auto px-6"}>
         <div className="flex gap-2 justify-between items-center">
           <div>
             <span className="flex-initial text-zinc-300">{t("madeby")}</span>
@@ -90,14 +109,45 @@ export default function Header() {
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
-          <NavbarItem className="hidden lg:flex">
-            <Link href="#">{t("login")}</Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Button as={Link} color="primary" href="/signup" variant="bordered">
-              {t("signup")}
-            </Button>
-          </NavbarItem>
+          {status !== "authenticated" ? (
+            <>
+              <NavbarItem className="hidden lg:flex">
+                <Link href="/login">{t("login")}</Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Button
+                  as={Link}
+                  color="primary"
+                  href="/signup"
+                  variant="bordered"
+                >
+                  {t("signup")}
+                </Button>
+              </NavbarItem>
+            </>
+          ) : (
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="bordered">{session?.user?.name}</Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem
+                  onPress={() => handleOnPress("manage")}
+                  key="manage"
+                >
+                  Manage
+                </DropdownItem>
+                <DropdownItem
+                  onPress={() => handleOnPress("logout")}
+                  key="logout"
+                  className="text-danger"
+                  color="danger"
+                >
+                  Logout
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          )}
         </NavbarContent>
         <NavbarMenu>
           {menuItems.map((item, index) => (

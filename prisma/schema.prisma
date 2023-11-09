@@ -1,15 +1,69 @@
-// datasource db {
-//     provider = "mongodb"
-//     url      = env("DATABASE_URL")
-// }
+generator client {
+  provider = "prisma-client-js"
+}
 
-// generator client {
-//     provider = "prisma-client-js"
-// }
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
 
-// model Test {
-//     id       String    @id @default(auto()) @map("_id") @db.ObjectId
-//     slug     String    @unique
-//     title    String
-//     body     String
-// }
+model categories {
+  id         String                @id @default(auto()) @map("_id") @db.ObjectId
+  category   Int
+  created_at DateTime              @default(now()) @db.Date
+  label      String
+  updated_at DateTime              @default(now()) @db.Date
+  companies  categoriesoncompany[]
+}
+
+model categoriesoncompany {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  companies    companies  @relation(fields: [companiesId], references: [id])
+  companiesId  String     @db.ObjectId
+  categories   categories @relation(fields: [categoriesId], references: [id])
+  categoriesId String     @db.ObjectId
+
+  @@map("CategoriesOnCompanies")
+}
+
+model companies {
+  id          String                @id @default(auto()) @map("_id") @db.ObjectId
+  created_at  DateTime              @default(now()) @db.Date
+  email       String                @unique
+  location    locations             @relation(fields: [locationsId], references: [id])
+  locationsId String                @unique @db.ObjectId
+  name        String
+  password    String
+  phone       String
+  status      Boolean               @default(false)
+  updated_at  DateTime              @default(now()) @db.Date
+  url         String                @unique
+  categories  categoriesoncompany[]
+  staffs      staffs[]
+
+  @@map("Company")
+}
+
+model locations {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  city        String
+  country     String
+  countryCode String
+  created_at  DateTime   @default(now()) @db.Date
+  lat         String
+  long        String
+  state       String
+  street      String
+  updated_at  DateTime   @default(now()) @db.Date
+  zip         String
+  company     companies?
+
+  @@map("Location")
+}
+
+model staffs {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  companies   companies @relation(fields: [companiesId], references: [id])
+  companiesId String    @db.ObjectId
+}
